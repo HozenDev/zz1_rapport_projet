@@ -1,0 +1,15 @@
+# ignore all files
+/*
+
+# not ignore gitignore
+!/.gitignore
+
+# not ignore readme
+!/readme.org
+
+# not ignore readme
+!/rapport_s1.org
+!/rapport_s1.html
+
+# not ignore img directory
+!/img

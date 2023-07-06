@@ -1,0 +1,276 @@
+#+SETUPFILE: https://hozendev.github.io/hozen-style/html/hozen.setup
+
+#+TITLE: ZZ1 PROJET SEMAINE 2
+#+AUTHOR: DUREL Enzo VILLEPREUX Thibault LEROY Louis
+#+LANGUAGE: fr
+
+* Sujet
+
+Un écosystème de type proie prédateurs est dans sa version la plus simple :
+
+un monde : par exemple une grille à maille rectangulaire, avec ou sans quelques obstacles, avec sa topologie (rectangulaire ou torique le plus souvent) des proies et des prédateurs sont placés sur le monde, le système fonctionne à temps discret : à chaque date de temps, les créatures réalisent une action les prédateurs peuvent ’manger’ les proies (dès qu’il y a contact, dès qu’au moins deux prédateurs entourent une proie, …) les proies essaient de survivre en se sauvant au mieux de leurs capacités.
+
+* Présentation du concept
+** Intelligence collective
+
+*** Exemples de déplacements
+
+[[./img/deplacements_collectifs.png]]
+
+** Robotique en essaim
+
+
+[[./img/robotique_essaim_1.jpg]]
+
+
+L'intérêt est la capacité qu'ont ces entités 'simples' à produire collectivement des systèmes intelligents ; de cette manière, ils réalisent ensemble des tâches inabordables pour un robot seul.
+
+** Démonstration
+
+[[./img/essaim-robotique-formes.gif]]
+
+* Règles
+** Perceptions
+
+#+begin_example
+1. Distance plus proche prédateur {JOKER,CLOSE,FAR}
+2. Cardinalité plus proche amis {JOKER, NORTH, SOUTH, EAST, WEST}
+3. Distance cible {JOKER,CLOSE,FAR}
+4. Cardinalité cible si trouvée sinon NOT_FOUND {JOKER, NORTH, SOUTH, EAST, WEST, NOT_FOUND}
+#+end_example
+   
+** Actions
+
+#+begin_example
+1. Deplacement:
+    1.1. Nord
+    1.2. Sud
+    1.3. Est
+    1.4. Ouest
+2. Communication entre prédateurs
+3. Destruction de la cible
+#+end_example
+
+** Résultat attendu:
+
+[[./img/modeles.png]]
+
+*** Modèle centralisé :
+
+Tous les robots de coordonnent entre eux, par exemple les robots forment une ligne horizontale et se déplace verticalement, tous en même temps.
+
+[[./img/modele_centralise.png]]
+
+*** Modèle distibué :
+
+Plusieurs groupe de robots se forment, tous les groupes se séparent pour parcourir la surface de recherche plus rapidement. 
+
+[[./img/modele_decentralise.png]]
+
+* Simulation
+
+#+begin_src sh
+  src/simulation/simulation.h
+  src/simulation/simulation.c
+#+end_src
+
+** Obtenir les perceptions
+
+#+begin_example
+ Mettre à jour le plus proche voisin (distance et cardinalité)
+ Pour chaque prédateurs:
+     Si la cible est trouvée ou que sa distance à la cible est à porter de communication:
+         Mettre à jour les perceptions de la cible (distance et cardinalité)
+#+end_example
+
+** Filtrage des règles
+
+#+begin_example
+   Pour chaque regle:
+       Si la perception d'un prédateur vérifie une regle:
+            ajout de la regle dans un tableau filtre
+            incrémentation de la pile du table filtre
+   Retourne le nombre de règles vérifiées
+#+end_example
+
+** Choisir l'action
+
+#+begin_example
+Mélanger les règles filtrées (vérifiées)
+Pour chaque règle compatible:
+    Calcul des probabilités
+    Calcul des probabilités cumulées
+    Mise à jour de l'action choisi
+Retourne l'action choisi
+#+end_example
+
+** Executer l'action
+
+#+begin_example
+Selon action:
+0:
+    Aller au nord
+1:
+    Aller au sud
+...
+4:
+    Communiquer à ses voisins l'emplacement de la cible
+5:
+    Attaquer la cible
+#+end_example
+
+** Mise à jour du monde
+
+La cible étant fixe, il n'y a pas de mise à jour du monde.
+
+* Optimisation discrète
+** Glouton aléatoire
+
+#+begin_example
+=============================[ALGORITHME glouton aleatoire]========================================
+
+Donnée  : un bon cerveau
+Retour  : le meilleur cerveau
+
+DEBUT ALGORITHME
+Prendre tout les indices possibles a modifié             
+
+POUR k de 0 a nb_repetition FAIRE
+|    Melanger indices
+|    POUR i de 0 a NB_INDICE FAIRE
+|    |    Test toutes les valeurs possibles pour cette indice 
+|    |_   Gardez la meilleure
+|_
+
+FIN ALGO
+#+end_example
+
+** Recuis simulé
+
+#+begin_example
+=============================[ALGORITHME RECUIT SIMULE]========================================
+
+Constantes : EPSILON
+
+Donnée  : un bon cerveau, pointeur fonction de descente température
+Retour  : le meilleur cerveau
+
+DEBUT ALGORITHME
+
+INITIALISER LA POP : le premier individu == bon cerveau (donnée de départ)
+                     les suivants : mutation du premier individu
+             
+DO
+|    création d'un nouveau cerveau grâce à un changement aléatoire d'une règle dans le cerveau initiale
+|
+|    SI nouvelle solution est meilleur ou avec une probabilité fonction de la temperature ALORS
+|    |   le nouveau cerveau devient le cerveau initiale
+|    FSI
+|
+|    met a jour la temperature (pointeur de fonction temperature)
+|
+|_ WHILE (tempertaure > EPSILON)
+
+FIN ALGO
+#+end_example
+
+** Génétique
+
+#+begin_example
+==============================[ALGORITHME GENETIQUE]==========================================
+
+Constantes : ITER_MAX, MUTATION_RATE, POPULATION_SIZE
+
+Donnée  : un bon cerveau
+Retour  : meilleur individu (individu == brain)
+
+DEBUT ALGORITHME
+
+INITIALISER LA POP : le premier individu == bon cerveau (donnée de départ)
+                     les suivants : mutation du premier individu
+
+TANT QUE (itération < ITER_MAX) FAIRE :
+|    calcule score chaque individu    
+|    trouver le meilleur individu dans la population, le savegarder dans new_population
+|
+|    Pour chaque nouvel individu dans la nouvelle population :
+|     |    soit :
+|     |            + mutation (5%)
+|     |          + tournoi parent puis croisement (différente méthode)
+|     |_ Fin Pour
+|
+|     Remplacer l'ancienne population par la nouvelle population.    
+|    Incrémenter le compteur d'itérations.
+|
+|_ Fin TQ
+
+FIN ALGORITHME
+#+end_example
+
+* Calcul parallèle
+
+#+begin_src sh
+  src/parallel/parallel.h
+  src/parallel/parallel.c
+#+end_src
+
+Mise en place d'un calcul parallèle sur les résolutions algorithmes d'optimisations.
+
+Simulation du même cerveau sur plusieurs instances d'un algorithme d'optimisation.
+Comparaison des résultats en moyenne.
+Prendre le cerveau correspondant à la moyenne minimale.
+
+* Moteur graphique
+
+Divisé en 2 structures:
+
+La structure du moteur possédant des attributs qui ne change pas au cours de l'éxécution d'une simulation.
+
+La structe d'état du moteur possédant tout les attributs qui définisse l'état du moteur du jeu.
+
+#+begin_example
+Initialisation du moteur (moteur et états du moteur)
+Tant que non fin:
+     prendre en compte événements utilisateurs
+     mettre à jour les états du moteur
+     mettre à jour l'affichage du moteur
+Libérer le moteur et états du moteur
+#+end_example
+
+* Démonstations
+** Première simulation
+** Simulation: Départ en ligne
+https://www.youtube.com/embed/lccOZnvgWQk
+
+- Séparation en meutes pour explorer le monde
+- Communication au prédateur le plus proche
+  
+** Simulation: Départ en colonne
+*** Départ milieu sur règles alétoires
+
+https://www.youtube.com/embed/KiImT1_W1TQ
+
+- Balayage latéral de l'espace
+- Convergence vers la proie de la droite et de la gauche
+
+*** Départ aligné à gauche + entrainement
+
+https://www.youtube.com/embed/GTSHm2lf7Jg
+
+- Balayage de gauche à droite
+- Communication Interposée
+
+** Simulation: Départ uniforme
+
+https://www.youtube.com/embed/RZZUAKbvT6U
+
+- Espace de départ remplie
+- Attaque sur la cible rapide
+
+* Améliorations
+
+- Ajouter des perceptions (densité, ...)
+
+* Organisation
+
+[[./img/trello.png]]

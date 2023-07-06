@@ -8,8 +8,8 @@
 !/readme.org
 
 # not ignore readme
-!/rapport_s1.org
-!/rapport_s1.html
+!/rapport_s?.org
+!/rapport_s?.html
 
 # not ignore img directory
 !/img

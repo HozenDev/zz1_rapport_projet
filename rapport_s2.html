@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
+<head>
+<!-- 2023-07-06 jeu. 20:08 -->
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ZZ1 PROJET SEMAINE 2</title>
+<meta name="author" content="DUREL Enzo VILLEPREUX Thibault LEROY Louis" />
+<meta name="generator" content="Org Mode" />
+<link rel="stylesheet" type="text/css" href="https://hozendev.github.io/hozen-style/html/css/reset.css" />
+<link rel="stylesheet" type="text/css" href="https://hozendev.github.io/hozen-style/html/css/hozen_style.css" />
+<script src="https://hozendev.github.io/hozen-style/html/scripts/toc.js"></script>
+<script src="https://hozendev.github.io/hozen-style/html/scripts/widget.js"></script>
+<script src="https://hozendev.github.io/hozen-style/html/scripts/theme.js"></script>
+</head>
+<body>
+<div id="content" class="content">
+<h1 class="title">ZZ1 PROJET SEMAINE 2</h1>
+<div id="table-of-contents" role="doc-toc">
+<h2>Table des matières</h2>
+<div id="text-table-of-contents" role="doc-toc">
+<ul>
+<li><a href="#org8583ae0">1. Sujet</a></li>
+<li><a href="#orgea3660e">2. Présentation du concept</a>
+<ul>
+<li><a href="#org46f35cc">2.1. Intelligence collective</a>
+<ul>
+<li><a href="#org8b45acb">2.1.1. Exemples de déplacements</a></li>
+</ul>
+</li>
+<li><a href="#orga90da0a">2.2. Robotique en essaim</a></li>
+<li><a href="#orgdd50b85">2.3. Démonstration</a></li>
+</ul>
+</li>
+<li><a href="#org56c1301">3. Règles</a>
+<ul>
+<li><a href="#org76f3368">3.1. Perceptions</a></li>
+<li><a href="#org7862c86">3.2. Actions</a></li>
+<li><a href="#org0e6742a">3.3. Résultat attendu:</a>
+<ul>
+<li><a href="#orgff4769a">3.3.1. Modèle centralisé :</a></li>
+<li><a href="#orge550dee">3.3.2. Modèle distibué :</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#orgea82891">4. Simulation</a>
+<ul>
+<li><a href="#org9c6d614">4.1. Obtenir les perceptions</a></li>
+<li><a href="#orge07cbd7">4.2. Filtrage des règles</a></li>
+<li><a href="#orgf3e815e">4.3. Choisir l'action</a></li>
+<li><a href="#org9868c5a">4.4. Executer l'action</a></li>
+<li><a href="#org0237f6e">4.5. Mise à jour du monde</a></li>
+</ul>
+</li>
+<li><a href="#org9c6cf2d">5. Optimisation discrète</a>
+<ul>
+<li><a href="#orgeea9031">5.1. Glouton aléatoire</a></li>
+<li><a href="#org3a2859e">5.2. Recuis simulé</a></li>
+<li><a href="#org59f65a0">5.3. Génétique</a></li>
+</ul>
+</li>
+<li><a href="#orgb74b446">6. Calcul parallèle</a></li>
+<li><a href="#org74cf974">7. Moteur graphique</a></li>
+<li><a href="#org4484adf">8. Démonstations</a>
+<ul>
+<li><a href="#orgfdaf082">8.1. Première simulation</a></li>
+<li><a href="#org3f293f2">8.2. Simulation: Départ en ligne</a></li>
+<li><a href="#orge4c7ca2">8.3. Simulation: Départ en colonne</a>
+<ul>
+<li><a href="#org2559dee">8.3.1. Départ milieu sur règles alétoires</a></li>
+<li><a href="#orgccbbfaa">8.3.2. Départ aligné à gauche + entrainement</a></li>
+</ul>
+</li>
+<li><a href="#orge652c1f">8.4. Simulation: Départ uniforme</a></li>
+</ul>
+</li>
+<li><a href="#org03e4f8a">9. Améliorations</a></li>
+<li><a href="#org895b881">10. Organisation</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org8583ae0" class="outline-2">
+<h2 id="org8583ae0"><span class="section-number-2">1.</span> Sujet</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Un écosystème de type proie prédateurs est dans sa version la plus simple :
+</p>
+
+<p>
+un monde : par exemple une grille à maille rectangulaire, avec ou sans quelques obstacles, avec sa topologie (rectangulaire ou torique le plus souvent) des proies et des prédateurs sont placés sur le monde, le système fonctionne à temps discret : à chaque date de temps, les créatures réalisent une action les prédateurs peuvent ’manger’ les proies (dès qu’il y a contact, dès qu’au moins deux prédateurs entourent une proie, …) les proies essaient de survivre en se sauvant au mieux de leurs capacités.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgea3660e" class="outline-2">
+<h2 id="orgea3660e"><span class="section-number-2">2.</span> Présentation du concept</h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org46f35cc" class="outline-3">
+<h3 id="org46f35cc"><span class="section-number-3">2.1.</span> Intelligence collective</h3>
+<div class="outline-text-3" id="text-2-1">
+</div>
+<div id="outline-container-org8b45acb" class="outline-4">
+<h4 id="org8b45acb"><span class="section-number-4">2.1.1.</span> Exemples de déplacements</h4>
+<div class="outline-text-4" id="text-2-1-1">
+
+<div id="org333cbee" class="figure">
+<p><img src="./img/deplacements_collectifs.png" alt="deplacements_collectifs.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orga90da0a" class="outline-3">
+<h3 id="orga90da0a"><span class="section-number-3">2.2.</span> Robotique en essaim</h3>
+<div class="outline-text-3" id="text-2-2">
+
+<div id="org742ef54" class="figure">
+<p><img src="./img/robotique_essaim_1.jpg" alt="robotique_essaim_1.jpg" />
+</p>
+</div>
+
+
+<p>
+L'intérêt est la capacité qu'ont ces entités 'simples' à produire collectivement des systèmes intelligents ; de cette manière, ils réalisent ensemble des tâches inabordables pour un robot seul.
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgdd50b85" class="outline-3">
+<h3 id="orgdd50b85"><span class="section-number-3">2.3.</span> Démonstration</h3>
+<div class="outline-text-3" id="text-2-3">
+
+<div id="org96e2b3b" class="figure">
+<p><img src="./img/essaim-robotique-formes.gif" alt="essaim-robotique-formes.gif" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org56c1301" class="outline-2">
+<h2 id="org56c1301"><span class="section-number-2">3.</span> Règles</h2>
+<div class="outline-text-2" id="text-3">
+</div>
+<div id="outline-container-org76f3368" class="outline-3">
+<h3 id="org76f3368"><span class="section-number-3">3.1.</span> Perceptions</h3>
+<div class="outline-text-3" id="text-3-1">
+<pre class="example" id="org8ca050e">
+1. Distance plus proche prédateur {JOKER,CLOSE,FAR}
+2. Cardinalité plus proche amis {JOKER, NORTH, SOUTH, EAST, WEST}
+3. Distance cible {JOKER,CLOSE,FAR}
+4. Cardinalité cible si trouvée sinon NOT_FOUND {JOKER, NORTH, SOUTH, EAST, WEST, NOT_FOUND}
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org7862c86" class="outline-3">
+<h3 id="org7862c86"><span class="section-number-3">3.2.</span> Actions</h3>
+<div class="outline-text-3" id="text-3-2">
+<pre class="example" id="org7456569">
+1. Deplacement:
+    1.1. Nord
+    1.2. Sud
+    1.3. Est
+    1.4. Ouest
+2. Communication entre prédateurs
+3. Destruction de la cible
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org0e6742a" class="outline-3">
+<h3 id="org0e6742a"><span class="section-number-3">3.3.</span> Résultat attendu:</h3>
+<div class="outline-text-3" id="text-3-3">
+
+<div id="org4d6a2a1" class="figure">
+<p><img src="./img/modeles.png" alt="modeles.png" />
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgff4769a" class="outline-4">
+<h4 id="orgff4769a"><span class="section-number-4">3.3.1.</span> Modèle centralisé :</h4>
+<div class="outline-text-4" id="text-3-3-1">
+<p>
+Tous les robots de coordonnent entre eux, par exemple les robots forment une ligne horizontale et se déplace verticalement, tous en même temps.
+</p>
+
+
+<div id="org1aa9917" class="figure">
+<p><img src="./img/modele_centralise.png" alt="modele_centralise.png" />
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge550dee" class="outline-4">
+<h4 id="orge550dee"><span class="section-number-4">3.3.2.</span> Modèle distibué :</h4>
+<div class="outline-text-4" id="text-3-3-2">
+<p>
+Plusieurs groupe de robots se forment, tous les groupes se séparent pour parcourir la surface de recherche plus rapidement. 
+</p>
+
+
+<div id="org75c4534" class="figure">
+<p><img src="./img/modele_decentralise.png" alt="modele_decentralise.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgea82891" class="outline-2">
+<h2 id="orgea82891"><span class="section-number-2">4.</span> Simulation</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+<pre class="src src-sh">src/simulation/simulation.h
+src/simulation/simulation.c
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org9c6d614" class="outline-3">
+<h3 id="org9c6d614"><span class="section-number-3">4.1.</span> Obtenir les perceptions</h3>
+<div class="outline-text-3" id="text-4-1">
+<pre class="example" id="org17ad9af">
+Mettre à jour le plus proche voisin (distance et cardinalité)
+Pour chaque prédateurs:
+    Si la cible est trouvée ou que sa distance à la cible est à porter de communication:
+        Mettre à jour les perceptions de la cible (distance et cardinalité)
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orge07cbd7" class="outline-3">
+<h3 id="orge07cbd7"><span class="section-number-3">4.2.</span> Filtrage des règles</h3>
+<div class="outline-text-3" id="text-4-2">
+<pre class="example" id="org45d2b0e">
+Pour chaque regle:
+    Si la perception d'un prédateur vérifie une regle:
+         ajout de la regle dans un tableau filtre
+         incrémentation de la pile du table filtre
+Retourne le nombre de règles vérifiées
+</pre>
+</div>
+</div>
+
+<div id="outline-container-orgf3e815e" class="outline-3">
+<h3 id="orgf3e815e"><span class="section-number-3">4.3.</span> Choisir l'action</h3>
+<div class="outline-text-3" id="text-4-3">
+<pre class="example" id="org406400f">
+Mélanger les règles filtrées (vérifiées)
+Pour chaque règle compatible:
+    Calcul des probabilités
+    Calcul des probabilités cumulées
+    Mise à jour de l'action choisi
+Retourne l'action choisi
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org9868c5a" class="outline-3">
+<h3 id="org9868c5a"><span class="section-number-3">4.4.</span> Executer l'action</h3>
+<div class="outline-text-3" id="text-4-4">
+<pre class="example" id="orgf63233e">
+Selon action:
+0:
+    Aller au nord
+1:
+    Aller au sud
+...
+4:
+    Communiquer à ses voisins l'emplacement de la cible
+5:
+    Attaquer la cible
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org0237f6e" class="outline-3">
+<h3 id="org0237f6e"><span class="section-number-3">4.5.</span> Mise à jour du monde</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+La cible étant fixe, il n'y a pas de mise à jour du monde.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org9c6cf2d" class="outline-2">
+<h2 id="org9c6cf2d"><span class="section-number-2">5.</span> Optimisation discrète</h2>
+<div class="outline-text-2" id="text-5">
+</div>
+<div id="outline-container-orgeea9031" class="outline-3">
+<h3 id="orgeea9031"><span class="section-number-3">5.1.</span> Glouton aléatoire</h3>
+<div class="outline-text-3" id="text-5-1">
+<pre class="example" id="org8e80e23">
+=============================[ALGORITHME glouton aleatoire]========================================
+
+Donnée  : un bon cerveau
+Retour  : le meilleur cerveau
+
+DEBUT ALGORITHME
+Prendre tout les indices possibles a modifié             
+
+POUR k de 0 a nb_repetition FAIRE
+|    Melanger indices
+|    POUR i de 0 a NB_INDICE FAIRE
+|    |    Test toutes les valeurs possibles pour cette indice 
+|    |_   Gardez la meilleure
+|_
+
+FIN ALGO
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org3a2859e" class="outline-3">
+<h3 id="org3a2859e"><span class="section-number-3">5.2.</span> Recuis simulé</h3>
+<div class="outline-text-3" id="text-5-2">
+<pre class="example" id="org3171006">
+=============================[ALGORITHME RECUIT SIMULE]========================================
+
+Constantes : EPSILON
+
+Donnée  : un bon cerveau, pointeur fonction de descente température
+Retour  : le meilleur cerveau
+
+DEBUT ALGORITHME
+
+INITIALISER LA POP : le premier individu == bon cerveau (donnée de départ)
+                     les suivants : mutation du premier individu
+             
+DO
+|    création d'un nouveau cerveau grâce à un changement aléatoire d'une règle dans le cerveau initiale
+|
+|    SI nouvelle solution est meilleur ou avec une probabilité fonction de la temperature ALORS
+|    |   le nouveau cerveau devient le cerveau initiale
+|    FSI
+|
+|    met a jour la temperature (pointeur de fonction temperature)
+|
+|_ WHILE (tempertaure &gt; EPSILON)
+
+FIN ALGO
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org59f65a0" class="outline-3">
+<h3 id="org59f65a0"><span class="section-number-3">5.3.</span> Génétique</h3>
+<div class="outline-text-3" id="text-5-3">
+<pre class="example" id="org6a15477">
+==============================[ALGORITHME GENETIQUE]==========================================
+
+Constantes : ITER_MAX, MUTATION_RATE, POPULATION_SIZE
+
+Donnée  : un bon cerveau
+Retour  : meilleur individu (individu == brain)
+
+DEBUT ALGORITHME
+
+INITIALISER LA POP : le premier individu == bon cerveau (donnée de départ)
+                     les suivants : mutation du premier individu
+
+TANT QUE (itération &lt; ITER_MAX) FAIRE :
+|    calcule score chaque individu    
+|    trouver le meilleur individu dans la population, le savegarder dans new_population
+|
+|    Pour chaque nouvel individu dans la nouvelle population :
+|     |    soit :
+|     |            + mutation (5%)
+|     |          + tournoi parent puis croisement (différente méthode)
+|     |_ Fin Pour
+|
+|     Remplacer l'ancienne population par la nouvelle population.    
+|    Incrémenter le compteur d'itérations.
+|
+|_ Fin TQ
+
+FIN ALGORITHME
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgb74b446" class="outline-2">
+<h2 id="orgb74b446"><span class="section-number-2">6.</span> Calcul parallèle</h2>
+<div class="outline-text-2" id="text-6">
+<div class="org-src-container">
+<pre class="src src-sh">src/parallel/parallel.h
+src/parallel/parallel.c
+</pre>
+</div>
+
+<p>
+Mise en place d'un calcul parallèle sur les résolutions algorithmes d'optimisations.
+</p>
+
+<p>
+Simulation du même cerveau sur plusieurs instances d'un algorithme d'optimisation.
+Comparaison des résultats en moyenne.
+Prendre le cerveau correspondant à la moyenne minimale.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org74cf974" class="outline-2">
+<h2 id="org74cf974"><span class="section-number-2">7.</span> Moteur graphique</h2>
+<div class="outline-text-2" id="text-7">
+<p>
+Divisé en 2 structures:
+</p>
+
+<p>
+La structure du moteur possédant des attributs qui ne change pas au cours de l'éxécution d'une simulation.
+</p>
+
+<p>
+La structe d'état du moteur possédant tout les attributs qui définisse l'état du moteur du jeu.
+</p>
+
+<pre class="example" id="orgc6e4da3">
+Initialisation du moteur (moteur et états du moteur)
+Tant que non fin:
+     prendre en compte événements utilisateurs
+     mettre à jour les états du moteur
+     mettre à jour l'affichage du moteur
+Libérer le moteur et états du moteur
+</pre>
+</div>
+</div>
+
+<div id="outline-container-org4484adf" class="outline-2">
+<h2 id="org4484adf"><span class="section-number-2">8.</span> Démonstations</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<div id="outline-container-orgfdaf082" class="outline-3">
+<h3 id="orgfdaf082"><span class="section-number-3">8.1.</span> Première simulation</h3>
+</div>
+<div id="outline-container-org3f293f2" class="outline-3">
+<h3 id="org3f293f2"><span class="section-number-3">8.2.</span> Simulation: Départ en ligne</h3>
+<div class="outline-text-3" id="text-8-2">
+<p>
+<a href="https://www.youtube.com/embed/lccOZnvgWQk">https://www.youtube.com/embed/lccOZnvgWQk</a>
+</p>
+
+<ul class="org-ul">
+<li>Séparation en meutes pour explorer le monde</li>
+<li>Communication au prédateur le plus proche</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orge4c7ca2" class="outline-3">
+<h3 id="orge4c7ca2"><span class="section-number-3">8.3.</span> Simulation: Départ en colonne</h3>
+<div class="outline-text-3" id="text-8-3">
+</div>
+<div id="outline-container-org2559dee" class="outline-4">
+<h4 id="org2559dee"><span class="section-number-4">8.3.1.</span> Départ milieu sur règles alétoires</h4>
+<div class="outline-text-4" id="text-8-3-1">
+<p>
+<a href="https://www.youtube.com/embed/KiImT1_W1TQ">https://www.youtube.com/embed/KiImT1_W1TQ</a>
+</p>
+
+<ul class="org-ul">
+<li>Balayage latéral de l'espace</li>
+<li>Convergence vers la proie de la droite et de la gauche</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-orgccbbfaa" class="outline-4">
+<h4 id="orgccbbfaa"><span class="section-number-4">8.3.2.</span> Départ aligné à gauche + entrainement</h4>
+<div class="outline-text-4" id="text-8-3-2">
+<p>
+<a href="https://www.youtube.com/embed/GTSHm2lf7Jg">https://www.youtube.com/embed/GTSHm2lf7Jg</a>
+</p>
+
+<ul class="org-ul">
+<li>Balayage de gauche à droite</li>
+<li>Communication Interposée</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orge652c1f" class="outline-3">
+<h3 id="orge652c1f"><span class="section-number-3">8.4.</span> Simulation: Départ uniforme</h3>
+<div class="outline-text-3" id="text-8-4">
+<p>
+<a href="https://www.youtube.com/embed/RZZUAKbvT6U">https://www.youtube.com/embed/RZZUAKbvT6U</a>
+</p>
+
+<ul class="org-ul">
+<li>Espace de départ remplie</li>
+<li>Attaque sur la cible rapide</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org03e4f8a" class="outline-2">
+<h2 id="org03e4f8a"><span class="section-number-2">9.</span> Améliorations</h2>
+<div class="outline-text-2" id="text-9">
+<ul class="org-ul">
+<li>Ajouter des perceptions (densité, &#x2026;)</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-org895b881" class="outline-2">
+<h2 id="org895b881"><span class="section-number-2">10.</span> Organisation</h2>
+<div class="outline-text-2" id="text-10">
+
+<div id="org5579abe" class="figure">
+<p><img src="./img/trello.png" alt="trello.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="author">Auteur: DUREL Enzo VILLEPREUX Thibault LEROY Louis</p>
+<p class="date">Created: 2023-07-06 jeu. 20:08</p>
+<p class="validation"><a href="https://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

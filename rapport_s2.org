@@ -4,22 +4,16 @@
 #+AUTHOR: DUREL Enzo VILLEPREUX Thibault LEROY Louis
 #+LANGUAGE: fr
 
-* Sujet
-
-Un écosystème de type proie prédateurs est dans sa version la plus simple :
-
-un monde : par exemple une grille à maille rectangulaire, avec ou sans quelques obstacles, avec sa topologie (rectangulaire ou torique le plus souvent) des proies et des prédateurs sont placés sur le monde, le système fonctionne à temps discret : à chaque date de temps, les créatures réalisent une action les prédateurs peuvent ’manger’ les proies (dès qu’il y a contact, dès qu’au moins deux prédateurs entourent une proie, …) les proies essaient de survivre en se sauvant au mieux de leurs capacités.
-
-* Présentation du concept
+* Présentation
 ** Intelligence collective
-
 *** Exemples de déplacements
 
+#+caption: Exemples de déplacements collectifs de population
 [[./img/deplacements_collectifs.png]]
 
 ** Robotique en essaim
 
-
+#+caption: Robotique en essaim
 [[./img/robotique_essaim_1.jpg]]
 
 
@@ -27,6 +21,7 @@ L'intérêt est la capacité qu'ont ces entités 'simples' à produire collectiv
 
 ** Démonstration
 
+#+caption: Génération de formes par des robots connectés
 [[./img/essaim-robotique-formes.gif]]
 
 * Règles
@@ -53,19 +48,27 @@ L'intérêt est la capacité qu'ont ces entités 'simples' à produire collectiv
 
 ** Résultat attendu:
 
+#+caption: Schémas des différents modèles de comportement
 [[./img/modeles.png]]
 
 *** Modèle centralisé :
 
 Tous les robots de coordonnent entre eux, par exemple les robots forment une ligne horizontale et se déplace verticalement, tous en même temps.
 
+#+caption: Modele centralisé sur des robots
 [[./img/modele_centralise.png]]
 
 *** Modèle distibué :
 
 Plusieurs groupe de robots se forment, tous les groupes se séparent pour parcourir la surface de recherche plus rapidement. 
 
+#+caption: Modele distribué sur des robots
 [[./img/modele_decentralise.png]]
+
+* Structure du projet
+
+#+caption: Graphes des dépendances du dossier source (src)
+[[./img/src_dependances.png]]
 
 * Simulation
 
@@ -152,13 +155,10 @@ FIN ALGO
 
 Constantes : EPSILON
 
-Donnée  : un bon cerveau, pointeur fonction de descente température
+Donnée  : un bon cerveau, pointeur fonction de descente température (linéaire, quadratique, ...)
 Retour  : le meilleur cerveau
 
 DEBUT ALGORITHME
-
-INITIALISER LA POP : le premier individu == bon cerveau (donnée de départ)
-                     les suivants : mutation du premier individu
              
 DO
 |    création d'un nouveau cerveau grâce à un changement aléatoire d'une règle dans le cerveau initiale
@@ -237,8 +237,25 @@ Tant que non fin:
 Libérer le moteur et états du moteur
 #+end_example
 
+#+caption: Graphe des structures du moteur graphique
+[[./img/engine_graph.png]]
+
 * Démonstations
+** Interface graphique
+
+#+caption: Menu de pause de la simulation 
+[[./img/menu_pause.png]]
+
+#+caption: Interface de la simulation en cours
+[[./img/jeu_en_execution.png]]
+
 ** Première simulation
+
+https://www.youtube.com/embed/wjsGIJv89LM
+
+- Déplacement aléatoire
+- Aucune convergence ne peut être estimée
+
 ** Simulation: Départ en ligne
 https://www.youtube.com/embed/lccOZnvgWQk
 
@@ -246,7 +263,7 @@ https://www.youtube.com/embed/lccOZnvgWQk
 - Communication au prédateur le plus proche
   
 ** Simulation: Départ en colonne
-*** Départ milieu sur règles alétoires
+*** Départ milieu sur des règles aléatoires
 
 https://www.youtube.com/embed/KiImT1_W1TQ
 
@@ -270,7 +287,17 @@ https://www.youtube.com/embed/RZZUAKbvT6U
 * Améliorations
 
 - Ajouter des perceptions (densité, ...)
+- 
+- 
 
 * Organisation
 
+Utilisation de Trello grâce aux intervenants de ZZ3
+
 [[./img/trello.png]]
+
+* Documentation
+
+Documentation entière sur le code et générée à partir de Doxygen:
+
+https://perso.isima.fr/~endurel/zz1/projet/doc_pp/html/index.html
